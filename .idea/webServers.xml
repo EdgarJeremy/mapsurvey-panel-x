@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="9dadd301-ca3f-4b1e-bd51-b87424696912" name="Mapsurvey" url="http://172.10.10.253">
+        <fileTransfer host="172.10.10.253" port="22" rootFolder="/home/sirius/experimental/mapsurvey" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

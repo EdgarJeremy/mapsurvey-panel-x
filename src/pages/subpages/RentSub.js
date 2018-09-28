@@ -45,8 +45,7 @@ export default class RentSub extends React.Component {
         let { limit, offset } = this.state;
         this._setLoading(true, 'Mengambil data sewaan..');
         Rent.index(limit, offset).then((res) => {
-            this.setState({ rents: res.data.rows, total: res.data.count });
-            this._setLoading(false);
+            this.setState({ rents: res.data.rows, total: res.data.count }, () => this._setLoading(false));
         });
     }
 
@@ -84,7 +83,7 @@ export default class RentSub extends React.Component {
     _onSubmitEdit() {
         let { editFields: data } = this.state;
         this.setState({ popupEdit: false });
-        this._setLoading(true, 'Menupdate data..');
+        this._setLoading(true, 'Mengupdate data..');
         Rent.edit(data.id, data).then((res) => {
             this._setLoading(false);
             if (res.status) {
@@ -185,10 +184,16 @@ export default class RentSub extends React.Component {
                                         <Table.Cell>{rent.tenant_email}</Table.Cell>
                                         <Table.Cell>{rent.tenant_phone}</Table.Cell>
                                         <Table.Cell>{rent.tenant_address}</Table.Cell>
-                                        <Table.Cell>{_.truncate(rent.tenant_description)} [<a href="javascript:void(0)" onClick={() => swal(rent.tenant_description)}>lengkap</a>]</Table.Cell>
+                                        <Table.Cell>[<a href="javascript:void(0)" onClick={() => swal(rent.tenant_description)}>baca</a>]</Table.Cell>
                                         <Table.Cell>{rent.object_quota}</Table.Cell>
                                         <Table.Cell>{moment(rent.created_at).format('MMMM Do YYYY, h:mm:ss a')}</Table.Cell>
                                         <Table.Cell>
+                                            {/* <Button animated color="blue" basic>
+                                                <Button.Content hidden>Detail</Button.Content>
+                                                <Button.Content visible>
+                                                    <Icon name="eye" />
+                                                </Button.Content>
+                                            </Button> */}
                                             <Button animated color="green" onClick={() => this._onEditPopup(rent)} basic>
                                                 <Button.Content hidden>Edit</Button.Content>
                                                 <Button.Content visible>
@@ -280,7 +285,7 @@ export default class RentSub extends React.Component {
                                 <label>Nama Penyewa</label>
                                 <input required value={editFields.tenant_name} onChange={(e) => {
                                     let { editFields } = this.state;
-                                    editFields.tenant_name  = e.target.value;
+                                    editFields.tenant_name = e.target.value;
                                     this.setState({ editFields });
                                 }} name="tenant_name" placeholder='Nama' />
                             </Form.Field>

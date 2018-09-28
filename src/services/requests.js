@@ -89,6 +89,15 @@ export const Public = {
             localStorage.setItem('refreshToken', null);
             return res;
         })
+    },
+
+    register: function(data) {
+        return R({
+            basepoint: this.basepoint,
+            endpoint: 'register',
+            method: 'POST',
+            data
+        });
     }
 
 };

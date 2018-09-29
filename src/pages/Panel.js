@@ -39,8 +39,8 @@ export default class Panel extends React.Component {
         let { history } = this.props;
         this._setLoading(true, 'Menghubungi server..');
         Public.logout().then(() => {
-            this._setLoading(false);
             history.push('/');
+            this._setLoading(false);
         });
     }
 
@@ -51,7 +51,7 @@ export default class Panel extends React.Component {
     }
 
     render() {
-        const { loading, loadingText } = this.state;
+        const { loading, loadingText, user } = this.state;
         return (
             <div className="container-panel">
                 {loading ? <Wait visible={true} text={loadingText} /> :
@@ -62,7 +62,19 @@ export default class Panel extends React.Component {
                         </Segment>
                         {/* Menu */}
                         <Menu style={{ borderRadius: 0 }} pointing inverted>
-                            <Menu.Item content={(<Link to={`${this.props.match.path}/`}>Sewaan</Link>)} active={this._currentRoute() === '/' || this._currentRoute() === ''} />
+                            {user.type === 'root' ? (
+                                // Root menu
+                                <Container>
+                                    <Menu.Item content={(<Link to={`${this.props.match.path}/`}>Sewaan</Link>)} active={this._currentRoute() === '/' || this._currentRoute() === ''} />
+                                </Container>
+                            ) : (
+                                    // Tenant menu
+                                    <Container>
+                                        <Menu.Item content={(<Link to={`${this.props.match.path}/`}>Objek</Link>)} active={this._currentRoute() === '/' || this._currentRoute() === ''} />
+                                        <Menu.Item content={(<Link to={`${this.props.match.path}/users`}>Akun Surveyor</Link>)} active={this._currentRoute() === '/users'} />
+                                        <Menu.Item content={(<Link to={`${this.props.match.path}/surveyor`}>Pantau</Link>)} active={this._currentRoute() === '/surveyor'} />
+                                    </Container>
+                                )}
                             <Menu.Menu position="right">
                                 <Menu.Item>
                                     <Button animated color="red" onClick={this._onLogout.bind(this)}>
@@ -75,9 +87,20 @@ export default class Panel extends React.Component {
                             </Menu.Menu>
                         </Menu>
                         {/* Content */}
-                        <Switch>
-                            <Route exact path={`${this.props.match.path}/`} render={(props) => <RentSub {...props} me={this.state.user} setLoading={this._setLoading.bind(this)} socket={this.props.socket} />} />
-                        </Switch>
+                        {user.type === 'root' ? (
+                            // Root pages
+                            <Switch>
+                                <Route exact path={`${this.props.match.path}/`} render={(props) => <RentSub {...props} me={this.state.user} setLoading={this._setLoading.bind(this)} socket={this.props.socket} />} />
+                            </Switch>
+                        ) : (
+                                // Tenant pages
+                                <Switch>
+                                    <Route exact path={`${this.props.match.path}/`} render={(props) => <ObjectSub {...props} me={this.state.user} socket={this.props.socket} />} />
+                                    <Route path={`${this.props.match.path}/users`} render={(props) => <UserSub {...props} me={this.state.user} socket={this.props.socket} />} />
+                                    <Route path={`${this.props.match.path}/surveyor`} render={(props) => <SurveyorSub {...props} me={this.state.user} socket={this.props.socket} />} />
+                                </Switch>
+                            )}
+
                     </Container>}
             </div>
         );

@@ -41,7 +41,7 @@ export default class Register extends React.Component {
         this._setLoading(true);
         Public.register(data).then((res) => {
             if (res.status) {
-                swal('Konfirmamsi', 'Pendaftaran berhasil. Silahkan cek inbox email anda untuk langkah selanjutnya', 'success').then(() => this._setLoading(false));
+                swal('Konfirmasi', 'Pendaftaran berhasil. Silahkan cek inbox email anda untuk langkah selanjutnya', 'success').then(() => this._setLoading(false));
                 form.reset();
             } else {
                 this._showError();

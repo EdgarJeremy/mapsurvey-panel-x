@@ -34,7 +34,6 @@ export default class RentSub extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
         this._loadRentData();
     }
 
@@ -47,7 +46,6 @@ export default class RentSub extends React.Component {
     }
 
     _setLoading(loading, loadingText) {
-        // this.props.setLoading(loading, loadingText);
         this.setState({ loading, loadingText });
     }
 
@@ -56,7 +54,7 @@ export default class RentSub extends React.Component {
     }
 
     _onEditPopup(user) {
-        this.setState({ popupEdit: true, editFields: user });
+        this.setState({ popupEdit: true, editFields: { ...user } });
     }
 
     _onSubmitAdd(e) {
@@ -277,7 +275,7 @@ export default class RentSub extends React.Component {
                             </Modal>
 
                             <Modal open={popupEdit} onClose={() => this.setState({ popupEdit: false })} closeIcon>
-                                <Modal.Header>Edit Sewaan {editFields.name}</Modal.Header>
+                                <Modal.Header>Edit Sewaan</Modal.Header>
                                 <Modal.Content>
                                     <Form method="post" onSubmit={this._onSubmitEdit.bind(this)}>
                                         <Form.Field>

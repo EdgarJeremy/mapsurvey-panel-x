@@ -1,4 +1,4 @@
 {
-    "baseURL": "http://localhost:8080/api",
-    "baseBackend": "http://localhost:8080"
+    "baseURL": "http://172.10.10.211:8080/api",
+    "baseBackend": "http://172.10.10.211:8080"
 }

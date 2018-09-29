@@ -24,10 +24,9 @@ export default class Panel extends React.Component {
             if (!res.status) {
                 history.push('/');
             } else {
-                // this.setState({
-                //     user: res.data
-                // }, () => this._setLoading(false));
-                this._setLoading(false);
+                this.setState({
+                    user: res.data
+                }, () => this._setLoading(false));
             }
         });
     }
@@ -54,8 +53,8 @@ export default class Panel extends React.Component {
     render() {
         const { loading, loadingText } = this.state;
         return (
-            // <div className="container-panel">
-                loading ? <Wait visible={true} text={loadingText} /> :
+            <div className="container-panel">
+                {loading ? <Wait visible={true} text={loadingText} /> :
                     <Container>
                         {/* Header */}
                         <Segment color="black" style={{ borderRadius: 0, borderBottomColor: '#ecf0f1', borderBottomWidth: 1, borderBottomStyle: 'solid' }} inverted>
@@ -79,8 +78,8 @@ export default class Panel extends React.Component {
                         <Switch>
                             <Route exact path={`${this.props.match.path}/`} render={(props) => <RentSub {...props} me={this.state.user} setLoading={this._setLoading.bind(this)} socket={this.props.socket} />} />
                         </Switch>
-                    </Container>
-            // </div>
+                    </Container>}
+            </div>
         );
     }
 

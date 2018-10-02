@@ -71,7 +71,7 @@ export default class Register extends React.Component {
                                         <Input required name="tenant_phone" label="+62" labelPosition="left" fluid placeholder="Nomor Telefon" />
                                     </Form.Field>
                                     <Form.Input required name="tenant_address" fluid icon="map" iconPosition="left" placeholder="Alamat" />
-                                    <Form.Input required name="object_quota" fluid icon="object group" iconPosition="left" placeholder="Kuota Objek" />
+                                    <Form.Input required name="site_quota" fluid icon="object group" iconPosition="left" placeholder="Kuota Jenis Tempat" />
                                     <Form.TextArea name="tenant_description" placeholder="Keterangan (Tujuan Penyewa)" />
 
 

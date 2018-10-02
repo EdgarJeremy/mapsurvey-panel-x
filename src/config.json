@@ -1,4 +1,4 @@
 {
-    "baseURL": "http://172.10.10.211:8080/api",
-    "baseBackend": "http://172.10.10.211:8080"
+    "baseURL": "https://mapsurvey-x.herokuapp.com/api",
+    "baseBackend": "https://mapsurvey-x.herokuapp.com"
 }

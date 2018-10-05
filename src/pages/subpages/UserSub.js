@@ -277,8 +277,8 @@ export default class UserSub extends React.Component {
                                                 editFields.type = value;
                                                 this.setState({ editFields });
                                             }} placeholder="Level" options={[
-                                                { key: 0, value: 'Administrator', text: 'Administrator' },
-                                                { key: 1, value: 'Surveyor', text: 'Surveyor' }
+                                                { key: 0, value: 'tenant', text: 'Tenant' },
+                                                { key: 1, value: 'surveyor', text: 'Surveyor' }
                                             ]} />
                                         </Form.Field>
                                         <Divider />

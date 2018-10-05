@@ -103,9 +103,9 @@ export const Public = {
 };
 
 
-export const Objects = {
+export const Site = {
 
-    basepoint: '/objects',
+    basepoint: '/sites',
 
     index: function () {
         return R({
@@ -138,6 +138,14 @@ export const Objects = {
             basepoint: this.basepoint,
             endpoint: `${id}`,
             method: 'DELETE'
+        });
+    },
+
+    export: function(id) {
+        return R({
+            basepoint: this.basepoint,
+            endpoint: `export/${id}`,
+            method: 'GET'
         });
     }
 

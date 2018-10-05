@@ -2,12 +2,12 @@ import React from 'react';
 import { Container, Segment, Menu, Icon, Button } from 'semantic-ui-react';
 import { Link, Switch, Route } from 'react-router-dom';
 
-import ObjectSub from './subpages/ObjectSub';
 import { Public } from '../services/requests';
 import Wait from '../components/Wait';
 import UserSub from './subpages/UserSub';
 import SurveyorSub from './subpages/SurveyorSub';
 import RentSub from './subpages/RentSub';
+import SiteSub from './subpages/SiteSub';
 
 export default class Panel extends React.Component {
 
@@ -70,7 +70,7 @@ export default class Panel extends React.Component {
                             ) : (
                                     // Tenant menu
                                     <Container>
-                                        <Menu.Item content={(<Link to={`${this.props.match.path}/`}>Objek</Link>)} active={this._currentRoute() === '/' || this._currentRoute() === ''} />
+                                        <Menu.Item content={(<Link to={`${this.props.match.path}/`}>Site</Link>)} active={this._currentRoute() === '/' || this._currentRoute() === ''} />
                                         <Menu.Item content={(<Link to={`${this.props.match.path}/users`}>Akun Surveyor</Link>)} active={this._currentRoute() === '/users'} />
                                         <Menu.Item content={(<Link to={`${this.props.match.path}/surveyor`}>Pantau</Link>)} active={this._currentRoute() === '/surveyor'} />
                                     </Container>
@@ -95,7 +95,7 @@ export default class Panel extends React.Component {
                         ) : (
                                 // Tenant pages
                                 <Switch>
-                                    <Route exact path={`${this.props.match.path}/`} render={(props) => <ObjectSub {...props} me={this.state.user} socket={this.props.socket} />} />
+                                    <Route exact path={`${this.props.match.path}/`} render={(props) => <SiteSub {...props} me={this.state.user} socket={this.props.socket} />} />
                                     <Route path={`${this.props.match.path}/users`} render={(props) => <UserSub {...props} me={this.state.user} socket={this.props.socket} />} />
                                     <Route path={`${this.props.match.path}/surveyor`} render={(props) => <SurveyorSub {...props} me={this.state.user} socket={this.props.socket} />} />
                                 </Switch>

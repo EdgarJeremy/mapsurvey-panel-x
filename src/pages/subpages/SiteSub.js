@@ -1,19 +1,20 @@
 import React from 'react';
 import { Segment, Divider, Button, Icon, Card, Label, Modal, Form, Grid, Select } from 'semantic-ui-react';
-import { Objects } from '../../services/requests';
+import fileDownload from 'js-file-download';
+import { Site } from '../../services/requests';
 import swal from 'sweetalert';
 import Wait from '../../components/Wait';
 
-export default class ObjectSub extends React.Component {
+export default class SiteSub extends React.Component {
 
     state = {
-        objects: [],
+        sites: [],
 
-        addObjectName: '',
+        addSiteName: '',
         popupAdd: false,
         addFields: [{ name: 'nama', type: 'string' }],
 
-        editObjectName: '',
+        editSiteName: '',
         popupEdit: false,
         editFields: [{ name: 'nama', type: 'string' }],
         editId: null,
@@ -23,18 +24,18 @@ export default class ObjectSub extends React.Component {
     }
 
     componentDidMount() {
-        this._fetchObjects();
+        this._fetchSites();
     }
 
     _onAddPopup() {
         this.setState({ popupAdd: true });
     }
 
-    _fetchObjects() {
-        this._setLoading(true, 'Mengambil data objek..');
-        Objects.index().then((res) => {
+    _fetchSites() {
+        this._setLoading(true, 'Mengambil data site..');
+        Site.index().then((res) => {
             this.setState({
-                objects: res.data.rows
+                sites: res.data.rows
             });
             this._setLoading(false);
         });
@@ -70,24 +71,24 @@ export default class ObjectSub extends React.Component {
 
     _onSubmitAdd(e) {
         let data = {
-            name: this.state.addObjectName,
+            name: this.state.addSiteName,
             fields: {}
         };
         this.state.addFields.forEach((field) => {
             data.fields[field.name] = field.type;
         });
         this.setState({ popupAdd: false });
-        this._setLoading(true, 'Mengirim data objek..');
-        Objects.save(data).then((res) => {
+        this._setLoading(true, 'Mengirim data site..');
+        Site.save(data).then((res) => {
             this._setLoading(false);
             if (res.status) {
-                swal('Konfirmasi', 'Data berhasil disimpan', 'success').then(this._fetchObjects.bind(this));
+                swal('Konfirmasi', 'Data berhasil disimpan', 'success').then(this._fetchSites.bind(this));
             } else {
-                swal('Error', res.message, 'error').then(this._fetchObjects.bind(this));
+                swal('Error', res.message, 'error').then(this._fetchSites.bind(this));
             }
             this.setState({
                 popupAdd: false, addFields: [{ name: 'nama', type: 'string' }],
-                addObjectName: '',
+                addSiteName: '',
             });
         });
     }
@@ -95,7 +96,7 @@ export default class ObjectSub extends React.Component {
 
     _onSubmitEdit(e) {
         let data = {
-            name: this.state.editObjectName,
+            name: this.state.editSiteName,
             fields: {}
         };
         this.state.editFields.forEach((field) => {
@@ -103,26 +104,26 @@ export default class ObjectSub extends React.Component {
         });
         data.id = this.state.editId;
         this.setState({ popupEdit: false });
-        this._setLoading(true, 'Menupdate data objek..');
-        Objects.edit(data).then((res) => {
+        this._setLoading(true, 'Mengupdate data site..');
+        Site.edit(data).then((res) => {
             this._setLoading(false);
             if (res.status) {
-                swal('Konfirmasi', 'Data berhasil disimpan', 'success').then(this._fetchObjects.bind(this));
+                swal('Konfirmasi', 'Data berhasil disimpan', 'success').then(this._fetchSites.bind(this));
             } else {
-                swal('Error', 'Data gagal disimpan', 'error').then(this._fetchObjects.bind(this));
+                swal('Error', 'Data gagal disimpan', 'error').then(this._fetchSites.bind(this));
             }
             this.setState({
                 popupEdit: false,
                 editFields: [{ name: 'nama', type: 'string' }],
-                editObjectName: ''
+                editSiteName: ''
             });
         });
     }
 
-    _onDeleteObject(id) {
+    _onDeleteSite(id) {
         swal({
             title: "Anda yakin?",
-            text: "Anda akan menghapus objek ini",
+            text: "Anda akan menghapus site ini",
             icon: "warning",
             buttons: [
                 'Tidak',
@@ -131,13 +132,13 @@ export default class ObjectSub extends React.Component {
             dangerMode: true,
         }).then((isConfirm) => {
             if (isConfirm) {
-                this._setLoading(true, 'Menghapus objek..');
-                Objects.delete(id).then((res) => {
+                this._setLoading(true, 'Menghapus site..');
+                Site.delete(id).then((res) => {
                     this._setLoading(false);
                     if (res.status) {
-                        swal('Konfirmasi', 'Data berhasil dihapus', 'success').then(this._fetchObjects.bind(this));
+                        swal('Konfirmasi', 'Data berhasil dihapus', 'success').then(this._fetchSites.bind(this));
                     } else {
-                        swal('Error', 'Data gagal disimpan', 'error').bind(this._fetchObjects.bind(this));
+                        swal('Error', 'Data gagal disimpan', 'error').bind(this._fetchSites.bind(this));
                     }
                     this.setState({ popupAdd: false });
                 });
@@ -145,19 +146,31 @@ export default class ObjectSub extends React.Component {
         });
     }
 
-    _onEditPopup(object) {
+    _onExport(id) {
+        this._setLoading(true, 'Membuat query..');
+        Site.export(id).then((res) => {
+            this._setLoading(false);
+            if (res.status) {
+                fileDownload(res.data.sql, `[${res.data.data.name}][MapSurvey Export] - ${new Date().toDateString()}.sql`);
+            } else {
+                swal('Error', res.message, 'error')
+            }
+        });
+    }
+
+    _onEditPopup(site) {
         let fields = [];
-        Object.keys(object.fields).forEach((field, i) => {
+        Object.keys(site.fields).forEach((field, i) => {
             let data = {};
             data.name = field;
-            data.type = object.fields[field];
+            data.type = site.fields[field];
             fields.push(data);
         });
-        this.setState({ popupEdit: true, editObjectName: object.name, editFields: fields, editId: object.id });
+        this.setState({ popupEdit: true, editSiteName: site.name, editFields: fields, editId: site.id });
     }
 
     render() {
-        const { objects, popupAdd, addFields, popupEdit, editFields, loading, loadingText } = this.state;
+        const { sites, popupAdd, addFields, popupEdit, editFields, loading, loadingText } = this.state;
 
         return (
             <div>
@@ -166,7 +179,7 @@ export default class ObjectSub extends React.Component {
                         <div>
                             <Segment>
                                 <Divider />
-                                <h2>Manajemen Objek</h2>
+                                <h2>Manajemen Site</h2>
                                 <Divider />
                                 <Button animated='vertical' color="green" onClick={this._onAddPopup.bind(this)}>
                                     <Button.Content hidden>Tambah</Button.Content>
@@ -182,31 +195,45 @@ export default class ObjectSub extends React.Component {
                                 </Button>
                                 <Divider />
                                 <Card.Group>
-                                    {(objects.map((object, i) => (
+                                    {(sites.map((site, i) => (
                                         <Card key={i}>
                                             <Card.Content>
-                                                <Card.Header>{object.name}</Card.Header>
-                                                <Card.Meta>Objek</Card.Meta>
+                                                <Card.Header>{site.name}</Card.Header>
+                                                <Card.Meta>Site</Card.Meta>
                                                 <Card.Description>
-                                                    {(Object.keys(object.fields).map((field, k) => {
+                                                    {(Object.keys(site.fields).map((field, k) => {
                                                         return (
-                                                            <Label key={k} as='a'>{field} </Label>
+                                                            <div key={k}>
+                                                                <Label ribbon as='a'><Icon color={site.fields[field] === "string" ? "yellow" : "green"} name={site.fields[field] === "string" ? "font" : "hashtag"} /> {field}</Label>
+                                                            </div>
                                                         );
                                                     }))}
                                                 </Card.Description>
                                             </Card.Content>
                                             <Card.Content extra>
                                                 <div className='ui two buttons'>
-                                                    <Button animated='vertical' color="green" basic onClick={() => this._onEditPopup(object)}>
+                                                    <Button animated='vertical' color="green" basic onClick={() => this._onEditPopup(site)}>
                                                         <Button.Content visible>Edit</Button.Content>
                                                         <Button.Content hidden>
                                                             <Icon name='edit' />
                                                         </Button.Content>
                                                     </Button>
-                                                    <Button animated='vertical' color="red" basic onClick={() => this._onDeleteObject(object.id)}>
+                                                    <Button animated='vertical' color="red" basic onClick={() => this._onDeleteSite(site.id)}>
                                                         <Button.Content visible>Hapus</Button.Content>
                                                         <Button.Content hidden>
                                                             <Icon name='trash' />
+                                                        </Button.Content>
+                                                    </Button>
+                                                </div>
+                                                <div className="ui divider" style={{
+                                                    marginTop: 5,
+                                                    marginBottom: 5
+                                                }}></div>
+                                                <div className="ui">
+                                                    <Button animated='vertical' color="teal" fluid basic onClick={() => this._onExport(site.id)}>
+                                                        <Button.Content visible>Export</Button.Content>
+                                                        <Button.Content hidden>
+                                                            <Icon name='download' />
                                                         </Button.Content>
                                                     </Button>
                                                 </div>
@@ -217,16 +244,16 @@ export default class ObjectSub extends React.Component {
                             </Segment>
 
                             <Modal open={popupAdd} onClose={() => this.setState({ popupAdd: false })} closeIcon>
-                                <Modal.Header>Tambah Objek Baru</Modal.Header>
+                                <Modal.Header>Tambah Site Baru</Modal.Header>
                                 <Modal.Content>
                                     <Form onSubmit={this._onSubmitAdd.bind(this)}>
                                         <Form.Field>
-                                            <label>Nama Objek</label>
+                                            <label>Nama Site</label>
                                             <input onChange={(e) => {
                                                 this.setState({
-                                                    addObjectName: e.target.value
+                                                    addSiteName: e.target.value
                                                 });
-                                            }} value={this.state.addObjectName} placeholder='Nama' />
+                                            }} value={this.state.addSiteName} placeholder='Nama' />
                                         </Form.Field>
                                         <Form.Field>
                                             <label>Fields</label>
@@ -268,16 +295,16 @@ export default class ObjectSub extends React.Component {
                             </Modal>
 
                             <Modal open={popupEdit} onClose={() => this.setState({ popupEdit: false })} closeIcon>
-                                <Modal.Header>Edit Objek</Modal.Header>
+                                <Modal.Header>Edit Site</Modal.Header>
                                 <Modal.Content>
                                     <Form onSubmit={this._onSubmitEdit.bind(this)}>
                                         <Form.Field>
-                                            <label>Nama Objek</label>
+                                            <label>Nama Site</label>
                                             <input onChange={(e) => {
                                                 this.setState({
-                                                    editObjectName: e.target.value
+                                                    editSiteName: e.target.value
                                                 });
-                                            }} value={this.state.editObjectName} placeholder='Nama' />
+                                            }} value={this.state.editSiteName} placeholder='Nama' />
                                         </Form.Field>
                                         <Form.Field>
                                             <label>Fields</label>

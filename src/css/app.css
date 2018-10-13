@@ -43,3 +43,14 @@ body {
     position: absolute;
     background-color: rgba(255,255,255,.9);
 }
+.no-data {
+    width: 100%;
+}
+.export-segment {
+    display: block;
+    margin-bottom: 6px;
+}
+.desc {
+    display: block;
+    margin-bottom: 6px;
+}

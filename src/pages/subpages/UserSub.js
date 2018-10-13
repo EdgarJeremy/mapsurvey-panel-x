@@ -213,7 +213,7 @@ export default class UserSub extends React.Component {
                                 </Table>
                             </Segment>
 
-                            <Modal open={popupAdd} onClose={() => this.setState({ popupAdd: false })} closeIcon>
+                            <Modal dimmer="blurring" open={popupAdd} onClose={() => this.setState({ popupAdd: false })} closeIcon>
                                 <Modal.Header>Tambah Pengguna Baru</Modal.Header>
                                 <Modal.Content>
                                     <Form method="post" onSubmit={this._onSubmitAdd.bind(this)}>
@@ -242,7 +242,7 @@ export default class UserSub extends React.Component {
                                 </Modal.Content>
                             </Modal>
 
-                            <Modal open={popupEdit} onClose={() => this.setState({ popupEdit: false })} closeIcon>
+                            <Modal dimmer="blurring" open={popupEdit} onClose={() => this.setState({ popupEdit: false })} closeIcon>
                                 <Modal.Header>Edit Pengguna</Modal.Header>
                                 <Modal.Content>
                                     <Form method="post" onSubmit={this._onSubmitEdit.bind(this)}>

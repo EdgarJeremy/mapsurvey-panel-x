@@ -45,7 +45,9 @@ const successHandler = function (res) {
 }
 
 const errorHandler = function (err) {
-    swal('Server Error', err.toString(), 'error');
+    swal('Server Error', err.toString(), 'error').then(() => {
+        window.location.reload();
+    });
 }
 
 export const Public = {
@@ -89,6 +91,15 @@ export const Public = {
             localStorage.setItem('refreshToken', null);
             return res;
         })
+    },
+
+    change_password: function(data) {
+        return R({
+            basepoint: this.basepoint,
+            endpoint: 'change_password',
+            method: 'POST',
+            data
+        });
     },
 
     register: function(data) {
@@ -141,10 +152,10 @@ export const Site = {
         });
     },
 
-    export: function(id) {
+    export: function(id, query) {
         return R({
             basepoint: this.basepoint,
-            endpoint: `export/${id}`,
+            endpoint: `export/${id}?attributes=${query.attributes.join(',')}&style=${query.style}&content=${query.content}`,
             method: 'GET'
         });
     }

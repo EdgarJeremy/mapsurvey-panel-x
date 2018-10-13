@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import swal from 'sweetalert';
 import { inspect } from '../services/utilities';
 import { Public } from '../services/requests';
 import Wait from '../components/Wait';
@@ -36,14 +37,49 @@ export default class Login extends React.Component {
 
     _onLogin(e) {
         let data = inspect(e.target);
+        this.login(data);
+    }
+
+    login(data) {
         let { history } = this.props;
         this._setLoading(true);
         Public.login(data).then((res) => {
             if (res.status) {
-                history.push('/panel');
+                if(res.data.firstLogin) {
+                    this.askPassword(data);
+                } else {
+                    history.push('/panel');
+                }
             } else {
                 this._showError();
                 this._setLoading(false);
+            }
+        });
+    }
+
+    askPassword(data) {
+        let { history } = this.props;
+        swal({
+            title: 'Ganti Password',
+            icon: 'info',
+            text: 'Tampaknya ini login pertama anda. Silakan ganti password untuk melanjutkan',
+            closeOnClickOutside: false,
+            closeOnEsc: false,
+            content: {
+                element: 'input',
+                attributes: {
+                    type: 'password',
+                    required: true
+                }
+            },
+        }).then((newPassword) => {
+            if(newPassword) {
+                Public.change_password({password: newPassword}).then((res) => {
+                    data.password = newPassword;
+                    this.login(data);
+                });
+            } else {
+                this.askPassword(data);
             }
         });
     }

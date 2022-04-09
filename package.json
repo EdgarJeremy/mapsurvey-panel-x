@@ -33,7 +33,7 @@
     "js-file-download": "^0.4.4",
     "lodash": "^4.17.11",
     "mapbox-gl": "^2.2.0",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",

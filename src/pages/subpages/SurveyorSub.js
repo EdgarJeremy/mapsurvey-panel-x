@@ -34,7 +34,6 @@ export default class SurveyorSub extends React.Component {
             <div>
                 <Segment>
                     <h2>Surveyor Aktif</h2>
-                    <Divider />
                     <h3>Style URL</h3>
                     <Input style={{width: 500}} value={map_id} onChange={(e) => this.setState({ map_id: e.target.value })} />{' '}
                     <Button primary onClick={this.onChangeMap.bind(this)}>Simpan</Button>

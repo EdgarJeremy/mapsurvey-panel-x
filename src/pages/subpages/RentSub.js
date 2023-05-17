@@ -150,7 +150,6 @@ export default class RentSub extends React.Component {
                         <div>
                             <Segment>
                                 <h2>Manajemen Sewaan</h2>
-                                <Divider />
                                 <Button animated="vertical" color="green" onClick={this._onAddPopup.bind(this)}>
                                     <Button.Content hidden>Tambah</Button.Content>
                                     <Button.Content visible>
